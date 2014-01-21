@@ -14,14 +14,13 @@ task 'watch', 'Watch src and autobuild from src/**/*.coffee to js/**/*.js on fil
     console.log stdout + stderr
 
 task 'start', 'Start coffee application (runs js/main.js)', ->
-  child = spawn 'node', ['--harmony', 'js/main.js']
+  child = spawn 'node', ['--harmony', 'js/main.js', 'target.txt', 'ls', '-l', '-h', 'target.txt']
   
   child.stdout.on 'data', (data) ->
     console.log "out:" + data
   
   child.stderr.on 'data', (err) ->
-    throw err if err
-    console.log "err:" + err
+    console.log "err:" + err if err
   
   child.on 'close', (code) ->
     console.log "exited with code:" + code
