@@ -8,10 +8,16 @@ if !filename
   throw "filename param missing!"
 
 
-console.log "now:"+new Date()
-console.log "now:"+Date.now()
-console.log "now:"+new Date().toUTCString()
-console.log "now:"+new Date().toString()
+console.log "obj:"+{test0:val1}
+console.log( { test1a: "val1", 
+test1b: 'val2' } )
+console.log(
+  {
+    test1a:'val1',
+    test1b:'val2'
+  }
+)
+console.log "end"
 
 
 server = net.createServer (connection) ->
@@ -19,6 +25,7 @@ server = net.createServer (connection) ->
   # reporting
   console.log "subscriber connected... cwd:"+process.cwd()
   connection.write "Now watching '"+filename+"' for changes...\n"
+  #connection.write JSON.stringify 
   
   # watcher setup
   watcher = fs.watch filename, ->
