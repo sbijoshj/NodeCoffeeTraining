@@ -1,40 +1,36 @@
-# first coffee program- watch a file to see if it changes
+# second coffee program- basic socket server
 fs = require('fs')
-spawn = require('child_process').spawn
+net = require('net')
+#spawn = require('child_process').spawn
 filename = process.argv[2]
-[command, params...] = process.argv.slice(3)
-#d = new Date()
 
 if !filename
   throw "filename param missing!"
 
-console.log process.cwd()
 
-#fs.exists 'target.txt', (e) ->
-#  console.log "exists: " + e
+console.log "now:"+new Date()
+console.log "now:"+Date.now()
+console.log "now:"+new Date().toUTCString()
+console.log "now:"+new Date().toString()
 
-#fs.watch 'target.txt', (e, f) ->
-#  console.log "target changed! ms:"+(new Date - d)
 
-console.log("params:"+params);
-
-fs.watch filename, (e, f) ->
-  ls = spawn(command, params);
-  output = ""
-#  ls.stdout.pipe(process.stdout)
-  ls.stdout.on 'data', (chunk) ->
-    output += chunk.toString()
+server = net.createServer (connection) ->
   
-  ls.on 'close', ->
-    console.log output
-    parts = output.split /\s+/
-    console.log parts
-    console.dir [parts[0], parts[4], parts[8]]
+  # reporting
+  console.log "subscriber connected... cwd:"+process.cwd()
+  connection.write "Now watching '"+filename+"' for changes...\n"
+  
+  # watcher setup
+  watcher = fs.watch filename, ->
+    connection.write "File '"+filename+"' changed:"+new Date()+"\n"
+  
+  # cleanup
+  connection.on 'close', ->
+    console.log 'subscriber disconnected'
+    watcher.close()
 
 
-#fs.appendFile 'target.txt', "new line to add", (e) ->
-#  throw e if e
-#  console.log "data appnd ms:"+(new Date - d)
+server.listen 5432, ->
+  console.log 'Listening for subscribers...'
 
-console.log "watching target..."
 
