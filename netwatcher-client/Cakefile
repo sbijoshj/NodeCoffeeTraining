@@ -1,0 +1,28 @@
+# simple learning project cakefile
+
+#debugger
+{exec, spawn} = require "child_process"
+
+task 'build', 'Build src (compile src/**/*.coffee to js/**/*.js)', ->
+  exec 'coffee -o js/ -c src/', (err, stdout, stderr) ->
+    throw err if err
+    console.log stdout + stderr
+
+task 'watch', 'Watch src and autobuild from src/**/*.coffee to js/**/*.js on file save', ->
+  exec 'coffee -o js/ -cw src/', (err, stdout, stderr) ->
+    throw err if err
+    console.log stdout + stderr
+
+task 'start', 'Start coffee application (runs js/main.js)', ->
+  child = spawn 'node', ['--harmony', 'js/main.js']
+  
+  child.stdout.on 'data', (data) ->
+    console.log "out:" + data
+  
+  child.stderr.on 'data', (err) ->
+    console.log "err:" + err if err
+  
+  child.on 'close', (code) ->
+    console.log "exited with code:" + code
+
+
