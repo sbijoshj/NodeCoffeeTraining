@@ -5,11 +5,13 @@ net = require('net')
 
 server = net.createServer (connection) ->
   
+  console.log "creating server and sending first half with connection:"+connection
   # send the first chunk immediately
   connection.write '{"type":"changed","file":"targ'
   
   # after one second, send the rest
   timer = setTimeout ->
+    console.log "writing the second half"
     connection.write 'et.txt","timestamp":1358175758495}' + "\n"
     connection.end()
   , 1000

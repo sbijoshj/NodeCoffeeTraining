@@ -1,10 +1,15 @@
 # third coffee program- basic socket client
 net = require('net')
-client = net.connect({port:5432})
-#spawn = require('child_process').spawn
+ldj = require('./ldj')
 
-client.on 'data', (data) ->
-  message = JSON.parse(data)
+netClient = net.connect({port:5432})
+ldjClient = ldj.connect(netClient)
+
+#spawn = require('child_process').spawn
+console.log "connected to ldj server ldjClient:", ldjClient
+debugger
+ldjClient.on 'message', (message) ->
+  console.log "got message:"+message
   if message.type == 'watching'
     console.log "Now watching file:"+message.file
   else if message.type == 'changed'
