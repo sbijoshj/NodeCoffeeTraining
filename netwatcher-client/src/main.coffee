@@ -3,7 +3,7 @@ net = require('net')
 ldj = require('./ldj')
 
 netClient = net.connect({port:5432})
-ldjClient = ldj.connect(netClient)
+ldjClient = new ldj.LDJClient(netClient)
 
 #spawn = require('child_process').spawn
 console.log "connected to ldj server ldjClient:", ldjClient
